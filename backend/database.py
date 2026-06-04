@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, text
 
 DATABASE_URL = "sqlite:///crm.db"
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 with engine.connect() as conn:
     conn.execute(text("""
@@ -18,4 +18,26 @@ with engine.connect() as conn:
     """))
     conn.commit()
 
-print("Tickets table created successfully!")
+from sqlalchemy import text
+from database import engine
+
+with engine.connect() as conn:
+    # conn.execute(
+    #     text("""
+    #     ALTER TABLE tickets
+    #     ADD COLUMN priority TEXT DEFAULT 'Medium'
+    #     """)
+    # )
+    conn.commit()
+    from sqlalchemy import text
+from database import engine
+
+with engine.connect() as conn:
+    result = conn.execute(text("PRAGMA table_info(tickets)"))
+
+    for row in result:
+        print(row)
+
+print("Priority column added")
+
+print("Database Ready")
