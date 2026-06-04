@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Support CRM</title>
+</head>
+<body>
+
+<h1>Customer Support CRM</h1>
+
+<h2>Create Ticket</h2>
+
+<input id="name" placeholder="Customer Name">
+<br><br>
+
+<input id="email" placeholder="Email">
+<br><br>
+
+<input id="subject" placeholder="Subject">
+<br><br>
+
+<input id="description" placeholder="Description">
+<br><br>
+
+<button onclick="createTicket()">
+Create Ticket
+</button>
+
+<h2>All Tickets</h2>
+
+<button onclick="loadTickets()">
+Load Tickets
+</button>
+
+<pre id="output"></pre>
+
+<script>
+
+async function createTicket() {
+
+    const name =
+        document.getElementById("name").value;
+
+    const email =
+        document.getElementById("email").value;
+
+    const subject =
+        document.getElementById("subject").value;
+
+    const description =
+        document.getElementById("description").value;
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/tickets?customer_name=${name}&customer_email=${email}&subject=${subject}&description=${description}`,
+            {
+                method: "POST"
+            }
+        );
+
+    const data = await response.json();
+
+    alert(
+        "Ticket Created: " +
+        data.ticket_id
+    );
+}
+
+async function loadTickets() {
+
+    const response =
+        await fetch(
+            "http://127.0.0.1:8000/tickets"
+        );
+
+    const data =
+        await response.json();
+
+    document.getElementById(
+        "output"
+    ).textContent =
+        JSON.stringify(data, null, 2);
+}
+
+</script>
+
+</body>
+</html>
